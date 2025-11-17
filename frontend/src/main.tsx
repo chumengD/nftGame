@@ -6,7 +6,7 @@ import { WagmiConfig, createConfig } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
 import { http } from 'viem'
 import './index.css'
-import App from './App.tsx'
+import Page from './page.tsx'
 
 const config = createConfig({
 	chains: [mainnet],
@@ -18,7 +18,7 @@ const config = createConfig({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
   <WagmiConfig config={config}>
-    <App />
+    <Page />
     </WagmiConfig>
   </StrictMode>,
 )

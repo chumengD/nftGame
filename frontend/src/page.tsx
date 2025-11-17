@@ -2,23 +2,13 @@
 import { useState, useEffect } from 'react'
 import {createPublicClient, createWalletClient, http, custom } from 'viem'
 import { mainnet } from 'viem/chains'
-import './App.css'
+import './Page.css'
 
 interface Props{
   connect: React.MouseEventHandler<HTMLButtonElement>;
   fetchBalance: React.MouseEventHandler<HTMLButtonElement>;
 
 }
-
-const erc20Abi = [
-  {
-    "name": "balanceOf",
-    "type": "function",
-    "stateMutability": "view",
-    "inputs": [{ "name": "account", "type": "address" }],
-    "outputs": [{ "name": "", "type": "uint256" }]
-  }
-];
 
 
 
@@ -35,7 +25,7 @@ const publicClient = createPublicClient({
       transport:http() 
           })
 
-function App() {
+function Page() {
   const [blockNumber,setBlockNumber] = useState<bigint | null>(null);
   let signer;
   
@@ -76,4 +66,4 @@ function App() {
   )
 }
 
-export default App
+export default Page
