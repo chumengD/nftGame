@@ -13,6 +13,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     mapping(address => uint256) pet_Exp;
     mapping(address => uint256) pet_Happy;
     mapping(address => uint256) pet_Level;
+    mapping(address => uint256) add_user_exp_cnt;
     
     struct Production {
         uint256 id;
@@ -25,28 +26,28 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     struct MintResult{
         bool isError;
         string message;
-    }
+    }//
     struct shoppingResult{
         bool isError;
         string message;
         uint256 current_user_Exp;
         uint256 current_pet_Exp;
-    }
+    }//
     struct add_pet_levelResult{
-        bool isMax;
         uint256 current_pet_Exp;
         uint256 current_pet_Level;
-        string message;
-    }
+    }//
     struct add_user_expResult{
+        bool isError;
         uint256 current_user_Exp;
-    }
+        string message;
+    }//
     struct happy_calculateResult{
         uint256 current_pet_Happy;
         uint256 current_pet_Exp;
         uint256 current_pet_Level;
         string message;
-    }
+    }//
     uint256 private _nextTokenId;
     mapping(address => uint256) user_TokenId;
     string uri = "ipfs://QmPKZg5bJ23JbeNpczpNN28ssvYfcjj2BJrftv3WJdsdTL";
@@ -74,9 +75,19 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
 
     // 签到函数
     function add_user_exp() public returns(add_user_expResult memory){
-        user_Exp[msg.sender] += 50;
+        if(add_user_exp_cnt[msg.sender]>=1){
+            return add_user_expResult({
+                isError: true,
+                current_user_Exp: user_Exp[msg.sender],
+                message: "You have signed in today!"
+            });
+        }
+        add_user_exp_cnt[msg.sender] += 1;
+        user_Exp[msg.sender] += 200;
         return add_user_expResult({
-            current_user_Exp: user_Exp[msg.sender]
+            isError: false,
+            current_user_Exp: user_Exp[msg.sender],
+            message: "Sign in successfully!"
         });
     }
     //更新uri函数
@@ -90,25 +101,13 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     //宠物升级函数
     function add_pet_level() public returns(add_pet_levelResult memory){
         while(pet_Exp[msg.sender]>=100){
-            // if(pet_Level==10){
-            //     updateUri(10);
-            //     return add_pet_levelResult({
-            //         isMax: 1,
-            //         current_pet_Exp: pet_Exp,
-            //         current_pet_Level: pet_Level,
-            //         message: "You pet's level is maxmum!"
-            //     });
-            // }else{
                 pet_Level[msg.sender] += 1;
                 pet_Exp[msg.sender] -= 100;
-            // }
         }
         updateUri(pet_Level[msg.sender]);
         return add_pet_levelResult({
-            isMax: false,
             current_pet_Exp: pet_Exp[msg.sender],
             current_pet_Level: pet_Level[msg.sender],
-            message: ""
         });
     }
 
@@ -162,7 +161,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             message: "Creat pets successfully!"
         });
     }
-
+    //计算宠物快乐度函数
     function happy_calculate(uint256 time_Pass) public returns(happy_calculateResult memory){
         uint256 value = time_Pass/60/60*24;
         if(pet_Happy[msg.sender]>value){
@@ -192,10 +191,8 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
                     current_pet_Level: pet_Level[msg.sender],
                     message: "Your pet's level is already 0"
                 });
-            }
-            
+            }  
         }
-
     }
     //获取时间
     function getCurrentTimestamp() public{
@@ -204,6 +201,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         happy_calculate(now_Time-last_Time[msg.sender]);
         last_Time[msg.sender] = now_Time;
     }
+
     //必要函数
     function _update(address to, uint256 tokenId, address auth)
         internal
