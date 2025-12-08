@@ -69,7 +69,6 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         init_product();
         init_petsUri();
     }
-
     // 签到函数
     function add_user_exp() public returns(add_user_expResult memory){
         if(add_user_exp_cnt[msg.sender]>=1){
@@ -86,6 +85,11 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             current_user_Exp: user_Exp[msg.sender],
             message: "Sign in successfully!"
         });
+    }
+    //返回历史索引
+    function get_history() public view returns(uint256 idx){
+        idx = pet_Level[msg.sender];
+        return idx;
     }
     //更新uri函数
     function updateUri(uint256 level) public {
