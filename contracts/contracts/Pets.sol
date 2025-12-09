@@ -14,7 +14,8 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     mapping(address => uint256) pet_Happy;
     mapping(address => uint256) pet_Level;
     mapping(address => uint256) add_user_exp_cnt;
-    
+    mapping(address => string) pet_name;
+
     struct Production {
         uint256 id;
         uint256 price;
@@ -47,7 +48,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     }//
     uint256 private _nextTokenId;
     mapping(address => uint256) user_TokenId;
-    string uri = "ipfs://QmPKZg5bJ23JbeNpczpNN28ssvYfcjj2BJrftv3WJdsdTL";
+    string uri = "ipfs://QmX9iG6XvN9ywvsBwheiudyXcSuWoJPFuZVHFwPVdCGF2c";
 
     //初始化商品
     function init_product() internal {
@@ -57,9 +58,11 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     }
     //初始化uri
     function init_petsUri() internal {
-        petsUri[1] = "";
-        petsUri[2] = "";
-        petsUri[3] = "";
+        petsUri[1] = "ipfs://QmX9iG6XvN9ywvsBwheiudyXcSuWoJPFuZVHFwPVdCGF2c";
+        petsUri[2] = "ipfs://QmcCG2QrhkyiAC8EqtUpjun7TUeFNAATggNwLeJEeD8ubM";
+        petsUri[3] = "ipfs://QmcKEAr793t7UPVnpLkKdSXBU4wwD41ikpcrMytwRENuU8";
+        petsUri[4] = "ipfs://QmcMV6Vf1foLqMC3yFb5gp8eftV7geF7xxzokavQQE69gd";
+        petsUri[5] = "ipfs://QmeQux7aHGaQ3UgmiRWFRLWWBYExZCoYqgENwqoszpo5HZ";
     }
 
     constructor(address initialOwner)
@@ -205,6 +208,11 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
                 message: "Your pet's level is already 0"
             });
         }
+    }
+    //获得宠物名称
+    function get_pet_name(string memory in_name) public returns(string memory){
+        pet_name[msg.sender] = in_name;
+        return pet_name[msg.sender];
     }
 
     //必要函数
