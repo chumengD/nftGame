@@ -5,7 +5,7 @@ body{
 .shop_icon{
     position: relative;
     top:1rem;
-    left:2rem;
+    left:4rem;
     width: 7rem;
     height: 3rem;
     background-color: black;
@@ -26,9 +26,9 @@ body{
 
 .shop_bg_shadow{
     position: relative;
-    margin-left:6.5rem;
+    margin-left:10rem;
     margin-top: 4rem;
-    width:24.7rem;
+    width:27rem;
     height: 23rem;
     background:black;   
 }
@@ -36,8 +36,8 @@ body{
 .shop_bg{
     position: absolute;
     top:-2rem;
-    left:-2.5rem;
-    width:24.7rem;
+    left:-4rem;
+    width:28rem;
     height: 23rem;
     background:white;
     overflow: auto;   
@@ -153,3 +153,91 @@ body{
     top:-0.35rem;
     left:-0.3rem;
 }
+
+/* --- 滚动条整体容器 --- */
+/* 定义滚动条的宽度，图片看起来比较宽，所以设为 18px */
+::-webkit-scrollbar {
+    width: 2rem; 
+    height: 2rem;
+}
+
+/* --- 1. 轨道 (背景黄色) --- */
+::-webkit-scrollbar-track {
+    background-color: #F7FF1A; /* 鲜艳的黄色 */
+    border: none;
+}
+
+/* --- 2. 滑块 (粉色边框 + 白色填充) --- */
+::-webkit-scrollbar-thumb {
+    /* 【第一步】设置透明边框来挤压空间 */
+    /* 总宽2rem，左右各0.5rem透明边框，中间剩下1rem的内容区 */
+    border-right: 0.3rem solid transparent;
+    
+    /* 【第二步】让背景色只填充在内容区，不填充到边框里 */
+    background-clip: content-box;
+    
+    /* 【第三步】滑块内部的填充色 */
+    background-color: #FFFFFF;
+    
+    /* 【第四步】用内阴影(inset)来模拟那个粉色的边框 */
+    /* 参数解释: inset x偏移 y偏移 模糊半径 扩展半径 颜色 */
+    /* 这里意思是在白色背景内部画一个 0.25rem 宽的粉色边框 */
+    box-shadow: inset 0 0 0 0.25rem #FF66CC;
+    
+    border-radius: 0; 
+}
+
+::-webkit-scrollbar-button {
+    display: block;
+    /* 1. 设置按钮背景为粉色 */
+    background-color: #ff66cc;
+    
+    /* 2. 关键修改：用边框代替阴影 */
+    /* 我们给右边和下边加粗黑边框，看起来就像是投影 */
+    border-right: 0.3rem solid #000;  /* 右侧阴影厚度 */
+    border-bottom: 0.3rem solid #000; /* 底部阴影厚度 */
+    
+    /* 左边和上边不要边框，保持干净 */
+    border-top: none;
+    border-left: none;
+
+    /* 3. 尺寸设置 */
+    width: 2rem; 
+    height: 2rem;
+
+    /* 4. 调整箭头位置 */
+    background-repeat: no-repeat;
+    /* 这里的 center 会自动让箭头在剩余的粉色区域里居中 */
+    background-position: center;
+    /* 稍微调大一点箭头，您的截图中箭头比较大 */
+    background-size: 1.2rem; 
+}
+
+/* 顶部按钮 (向上) */
+::-webkit-scrollbar-button:vertical:start:decrement {
+    /* 请确保你的 /upArrow.png 是一个白色的像素风箭头图片 */
+    background-image: url('/upArrow.png');
+}
+
+/* 底部按钮 (向下) */
+::-webkit-scrollbar-button:vertical:end:increment {
+    /* 请确保你的 /downArrow.png 是一个白色的像素风箭头图片 */
+    background-image: url('/downArrow.png');
+}
+
+/* 隐藏多余的按钮组合 */
+::-webkit-scrollbar-button:vertical:start:increment,
+::-webkit-scrollbar-button:vertical:end:decrement {
+    display: none;
+}
+
+.up_scrollbar_button{
+    position:absolute;
+    top:1rem;
+    left: 1rem;
+}
+
+.down_scrollbar_button{ 
+    position:absolute;
+    top:1rem;
+    left: 1rem;}

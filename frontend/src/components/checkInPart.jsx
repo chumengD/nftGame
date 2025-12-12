@@ -15,7 +15,7 @@ export function CheckIn({days,month,day,blessing}){
             <div className='check_day'><div className='check_day_content'>{day??11}</div></div></div>
         <div className='checkIcon_shadow'>
             <button className='checkIcon'><img  src='/checked.png' width='50rem'></img></button></div>
-        <div className='accumulat_days'>{days??'99'} Days</div>
+        <div className='accumulat_days'>{days??'0'} Days</div>
     </div>
 
     </div>)

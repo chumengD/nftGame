@@ -15,7 +15,7 @@ export function Home(){
         abi:contract.abi,
         functionName:'getCurrentTimestamp'
     })
-    const mood = data? data.current_pet_Happy:90;
+    const mood = data? data.current_pet_Happy:0;
     const Exp = data? data.current_pet_Exp:50;
     const lv = data?data.current_pet_Level:'xx';
 
@@ -23,7 +23,7 @@ export function Home(){
     function To(){
       navigate('record');
     }
-    return (<>
+    return (<><div className="home">
 
     <div className="bg" >
         <div className="websiteName">
@@ -41,6 +41,7 @@ export function Home(){
             <div className="bg2">
                 <div className="name">{name?name:'NAME'}</div>
                 <div className="lv">Lv.{lv}</div>
+                <div className="pet"><img src='/1级.png' width='600rem'/></div>
             </div>
         </div>
 
@@ -69,7 +70,7 @@ export function Home(){
 
              <div className="shop"><Shop/></div>
     </div>
-          </>)
+        </div>  </>)
 }
 
 

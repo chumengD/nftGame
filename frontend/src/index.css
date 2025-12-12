@@ -41,7 +41,7 @@ button {
 
 button:focus,
 button:focus-visible {
-  outline: 1px auto -webkit-focus-ring-color;
+  outline: 1px auto #ffffff;
 }
 
 @media (prefers-color-scheme: light) {

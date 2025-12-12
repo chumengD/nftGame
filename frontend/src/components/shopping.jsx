@@ -16,11 +16,11 @@ function ShopCard({number,cost,image,des}){
 
 }
 
-export function Shop(){
+export function Shop({point}){
     return(<>
     <div className="shop_icon">
         <img src='/shopping.png' width='45rem' className='shop_img'/>
-        <div className='money'>999    <span style={{color:'#F7FF1A'}}>$</span></div>
+        <div className='money'>{point??'0'}<span style={{color:'#F7FF1A'}}>$</span></div>
     </div>
     <div className='shop_bg_shadow'>
     <div className='shop_bg'>
@@ -28,5 +28,10 @@ export function Shop(){
         <ShopCard number={2} cost={514} image='/rocket.png' des='传奇机长，准备起飞！'/>
         <ShopCard number={2} cost={514} image='/rocket.png' des='传奇机长，准备起飞！'/>
     </div></div>
+
+   
     </>)
 }
+
+/* <div className='up_scrollbar_button'><img src='./upArrow.png' width='50rem'/></div>
+    <div className='down_scrollbar_button'><img src='./downArrow.png' width='50rem'/></div> */

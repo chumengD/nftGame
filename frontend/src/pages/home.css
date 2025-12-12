@@ -4,6 +4,7 @@
   padding: 0;
 }
 
+
 .bg{
 position: relative; 
 width: 100vw;
@@ -16,6 +17,7 @@ min-width: 1690px;
 background-color: #F7FF1A;
 border-top: 1px solid transparent;
 }
+
 
 .w1{
     
@@ -210,7 +212,7 @@ border-top: 1px solid transparent;
 .checkIN{
     position: absolute;
     top:6rem;
-    right:7.5rem;
+    right:5rem;
     transform: scale(0.75);
 }
 
@@ -221,8 +223,8 @@ border-top: 1px solid transparent;
     transform: scale(1.2);
 }
 
-.prt{
-    display: flex;
-    max-width: 10rem;
-    max-height: 10rem;
+.pet{
+    position:absolute;
+    top:-1rem;
 }
+
