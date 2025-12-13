@@ -5,6 +5,7 @@ require("./tasks/deploy-Pets");
 const PRIVATE_KEY = process.env.PrivateKey;
 const ETHERSCAN_API = process.env.EhterscanApi;
 const QUICKNODE_API = process.env.QuickNodeApi;
+const InfuraApi = process.env.InfuraApi;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     sepolia: {
-      url: QUICKNODE_API,
+      url: InfuraApi,
       accounts: [PRIVATE_KEY],
       chainId: 11155111
     }

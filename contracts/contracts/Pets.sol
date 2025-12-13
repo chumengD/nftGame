@@ -22,32 +22,10 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         uint256 nutrition;
         uint256 happy_value;
     }
-    mapping(uint256 => Production) public production;
-
-    struct MintResult{
-        bool isError;
-        string message;
-    }//
-    struct shoppingResult{
-        bool isError;
-        string message;
-        uint256 current_user_Exp;
-        uint256 current_pet_Exp;
-        uint256 current_pet_Level;
-    }//
-    struct add_user_expResult{
-        bool isError;
-        uint256 current_user_Exp;
-        string message;
-    }//
-    struct happy_calculateResult{
-        uint256 current_pet_Happy;
-        uint256 current_pet_Exp;
-        uint256 current_pet_Level;
-        string message;
-    }//
-    uint256 private _nextTokenId;
     mapping(address => uint256) user_TokenId;
+    mapping(uint256 => Production) public production;
+    uint256 private _nextTokenId;
+    
     string uri = "ipfs://QmX9iG6XvN9ywvsBwheiudyXcSuWoJPFuZVHFwPVdCGF2c";
 
     //初始化商品
@@ -73,27 +51,19 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         init_petsUri();
     }
     // 签到函数
-    function add_user_exp() public returns(add_user_expResult memory){
-        if(add_user_exp_cnt[msg.sender]>=1){
-            return add_user_expResult({
-                isError: true,
-                current_user_Exp: user_Exp[msg.sender],
-                message: "You have signed in today!"
-            });
-        }
+    event add_user_exp_Event(bool isError, uint256 current_user_Exp, uint256 count, string message);
+    function add_user_exp() public{
         add_user_exp_cnt[msg.sender] += 1;
-        user_Exp[msg.sender] += 200;
-        return add_user_expResult({
-            isError: false,
-            current_user_Exp: user_Exp[msg.sender],
-            message: "Sign in successfully!"
-        });
+        user_Exp[msg.sender] += 100;
+        add_user_exp_cnt[msg.sender] +=1;
+        emit add_user_exp_Event(false, user_Exp[msg.sender], add_user_exp_cnt[msg.sender],"Sign in successful");
     }
     //返回历史索引
-    function get_history() public view returns(uint256 idx){
-        idx = pet_Level[msg.sender];
-        return idx;
+    event get_history_Event(uint256 idx);
+    function get_history() public{
+        emit get_history_Event(pet_Level[msg.sender]);
     }
+
     //更新uri函数
     function updateUri(uint256 level) public {
         string memory newUri = petsUri[level];
@@ -102,67 +72,60 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         }
         _setTokenURI(user_TokenId[msg.sender],newUri);
     }
+
     //宠物升级函数
     function add_pet_level() public{
+        bool leveledUp = false;
         while(pet_Exp[msg.sender]>=100){
+            leveledUp = true;
             pet_Level[msg.sender] += 1;
             pet_Exp[msg.sender] -= 100;
         }
-        updateUri(pet_Level[msg.sender]);
+        if(leveledUp){
+            updateUri(pet_Level[msg.sender]);
+            leveledUp = false;
+        }
     }
 
     //商店购买函数
-    function shopping(uint256 _id) public returns (shoppingResult memory){
+    event shopping_Event(bool isError, string message, uint256 current_user_Exp, uint256 current_pet_Exp, uint256 current_pet_Level);
+    function shopping(uint256 _id) public{
         if(user_Exp[msg.sender] < production[_id].price){
-            return shoppingResult({
-                isError: true,
-                message: "You don't have enough experience points to buy this production!",
-                current_user_Exp: 0,
-                current_pet_Exp: 0,
-                current_pet_Level: 0
-            });
+            emit shopping_Event(true, "You don't have enough experience points to buy this production!", user_Exp[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender]);
+        }else{
+            user_Exp[msg.sender] -= production[_id].price;
+            pet_Exp[msg.sender] += production[_id].nutrition;
+            pet_Happy[msg.sender] += production[_id].happy_value;
+            add_pet_level();
+            emit shopping_Event(false, "Purchase Successful", user_Exp[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender]);
         }
-        user_Exp[msg.sender] -= production[_id].price;
-        pet_Exp[msg.sender] += production[_id].nutrition;
-        pet_Happy[msg.sender] += production[_id].happy_value;
-        add_pet_level();
-        return shoppingResult({
-            isError: false,
-            message: "Purchase Successful",
-            current_user_Exp: user_Exp[msg.sender],
-            current_pet_Exp: pet_Exp[msg.sender],
-            current_pet_Level: pet_Level[msg.sender]
-        });
     }
+    
     //初始化获取时间
     function startgetCurrentTimestamp() public{
         last_Time[msg.sender] = block.timestamp;
         pet_Happy[msg.sender] = 600;
     }
+
     //制造宠物函数
-    function mint() public returns (MintResult memory){
+    event mint_Event(bool isError, string message,uint256 current_user_Exp);
+    function mint() public{
         if(user_Exp[msg.sender]<100){
-            return MintResult({
-                isError: true,
-                message: "You need at least 100 experience points to get a pet!"
-            });
+            emit mint_Event(true, "You need at least 100 experience points to get a pet!", user_Exp[msg.sender]);
+        }else if(balanceOf(msg.sender)>=1){
+            emit mint_Event(true, "A person only can have one pet!",user_Exp[msg.sender]);
+        }else{
+            uint256 tokenId = _nextTokenId++;
+            _safeMint(msg.sender, tokenId);
+            _setTokenURI(tokenId, uri);
+            user_TokenId[msg.sender] = tokenId;
+            startgetCurrentTimestamp();
+            user_Exp[msg.sender] -= 100;
+            emit mint_Event(false, "Creat pets successfully!",user_Exp[msg.sender]);
         }
-        if(balanceOf(msg.sender)>=1){
-            return MintResult({
-                isError: true,
-                message: "A person only can have one pet!"
-            });
-        }
-        uint256 tokenId = _nextTokenId++;
-        _safeMint(msg.sender, tokenId);
-        _setTokenURI(tokenId, uri);
-        user_TokenId[msg.sender] = tokenId;
-        startgetCurrentTimestamp();
-        return MintResult({
-            isError: false,
-            message: "Creat pets successfully!"
-        });
+        
     }
+
     //计算宠物快乐度函数
     function happy_calculate(uint256 time_Pass) public returns(uint256 x){
         uint256 value = time_Pass/60/60*24;
@@ -180,39 +143,28 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             }  
         }
     }
+
     //获取时间
-    function getCurrentTimestamp() public returns(happy_calculateResult memory){
+    event getCurrentTimestamp_Event(uint256 current_user_Exp, uint256 current_pet_Happy, uint256 current_pet_Exp, uint256 current_pet_Level, string message);
+    function getCurrentTimestamp() public{
         if(last_Time[msg.sender]==0) revert();
         uint256 now_Time = block.timestamp;
         uint256 x=happy_calculate(now_Time-last_Time[msg.sender]);
         last_Time[msg.sender] = now_Time;
         if(x==0){
-            return happy_calculateResult({
-                current_pet_Happy: pet_Happy[msg.sender],
-                current_pet_Exp: pet_Exp[msg.sender],
-                current_pet_Level: pet_Level[msg.sender],
-                message: "please attention your pet emotion!"
-            });
+            emit getCurrentTimestamp_Event(user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "please attention your pet emotion!");
         }else if(x==1){
-            return happy_calculateResult({
-                current_pet_Happy: 0,
-                current_pet_Exp: pet_Exp[msg.sender],
-                current_pet_Level: pet_Level[msg.sender],
-                message: "Level substract 1"
-            });
+            emit getCurrentTimestamp_Event(user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Level substract 1");
         }else{
-            return happy_calculateResult({
-                current_pet_Happy: 0,
-                current_pet_Exp: pet_Exp[msg.sender],
-                current_pet_Level: pet_Level[msg.sender],
-                message: "Your pet's level is already 0"
-            });
+            emit getCurrentTimestamp_Event(user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Your pet's level is already 0");
         }
     }
+
     //获得宠物名称
-    function get_pet_name(string memory in_name) public returns(string memory){
+    event get_pet_name_Event(string name);
+    function get_pet_name(string memory in_name) public{
         pet_name[msg.sender] = in_name;
-        return pet_name[msg.sender];
+        emit get_pet_name_Event(pet_name[msg.sender]);
     }
 
     //必要函数
