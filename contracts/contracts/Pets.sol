@@ -147,16 +147,19 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     //获取时间
     event getCurrentTimestamp_Event(string current_pet_name,uint256 current_user_Exp, uint256 current_pet_Happy, uint256 current_pet_Exp, uint256 current_pet_Level, string message);
     function getCurrentTimestamp() public{
-        if(last_Time[msg.sender]==0) revert();
-        uint256 now_Time = block.timestamp;
-        uint256 x=happy_calculate(now_Time-last_Time[msg.sender]);
-        last_Time[msg.sender] = now_Time;
-        if(x==0){
-            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "please attention your pet emotion!");
-        }else if(x==1){
-            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Level substract 1");
+        if(last_Time[msg.sender]!=0){
+            uint256 now_Time = block.timestamp;
+            uint256 x=happy_calculate(now_Time-last_Time[msg.sender]);
+            last_Time[msg.sender] = now_Time;
+            if(x==0){
+                emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "please attention your pet emotion!");
+            }else if(x==1){
+                emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Level substract 1");
+            }else{
+                emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Your pet's level is already 0");
+            }
         }else{
-            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Your pet's level is already 0");
+            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "You don't have a pet yet!");
         }
     }
 
