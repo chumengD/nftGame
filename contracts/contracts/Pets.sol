@@ -58,10 +58,10 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         add_user_exp_cnt[msg.sender] +=1;
         emit add_user_exp_Event(false, user_Exp[msg.sender], add_user_exp_cnt[msg.sender],"Sign in successful");
     }
+
     //返回历史索引
-    event get_history_Event(uint256 idx);
-    function get_history() public{
-        emit get_history_Event(pet_Level[msg.sender]);
+    function get_history() public view returns(uint256){
+        return pet_Level[msg.sender];
     }
 
     //更新uri函数
@@ -108,12 +108,12 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     }
 
     //制造宠物函数
-    event mint_Event(bool isError, string message,uint256 current_user_Exp);
+    event mint_Event(bool isError, string message,uint256 current_user_Exp,uint256 current_pet_Level);
     function mint() public{
         if(user_Exp[msg.sender]<100){
-            emit mint_Event(true, "You need at least 100 experience points to get a pet!", user_Exp[msg.sender]);
+            emit mint_Event(true, "You need at least 100 experience points to get a pet!", user_Exp[msg.sender],pet_Level[msg.sender]);
         }else if(balanceOf(msg.sender)>=1){
-            emit mint_Event(true, "A person only can have one pet!",user_Exp[msg.sender]);
+            emit mint_Event(true, "A person only can have one pet!",user_Exp[msg.sender],pet_Level[msg.sender]);
         }else{
             uint256 tokenId = _nextTokenId++;
             _safeMint(msg.sender, tokenId);
@@ -121,9 +121,9 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             user_TokenId[msg.sender] = tokenId;
             startgetCurrentTimestamp();
             user_Exp[msg.sender] -= 100;
-            emit mint_Event(false, "Creat pets successfully!",user_Exp[msg.sender]);
+            pet_Level[msg.sender] = 1;
+            emit mint_Event(false, "Creat pets successfully!",user_Exp[msg.sender],pet_Level[msg.sender]);
         }
-        
     }
 
     //计算宠物快乐度函数
@@ -145,26 +145,26 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     }
 
     //获取时间
-    event getCurrentTimestamp_Event(uint256 current_user_Exp, uint256 current_pet_Happy, uint256 current_pet_Exp, uint256 current_pet_Level, string message);
+    event getCurrentTimestamp_Event(string current_pet_name,uint256 current_user_Exp, uint256 current_pet_Happy, uint256 current_pet_Exp, uint256 current_pet_Level, string message);
     function getCurrentTimestamp() public{
         if(last_Time[msg.sender]==0) revert();
         uint256 now_Time = block.timestamp;
         uint256 x=happy_calculate(now_Time-last_Time[msg.sender]);
         last_Time[msg.sender] = now_Time;
         if(x==0){
-            emit getCurrentTimestamp_Event(user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "please attention your pet emotion!");
+            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "please attention your pet emotion!");
         }else if(x==1){
-            emit getCurrentTimestamp_Event(user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Level substract 1");
+            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Level substract 1");
         }else{
-            emit getCurrentTimestamp_Event(user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Your pet's level is already 0");
+            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Your pet's level is already 0");
         }
     }
 
     //获得宠物名称
-    event get_pet_name_Event(string name);
-    function get_pet_name(string memory in_name) public{
+    event set_pet_name_Event(string message);
+    function set_pet_name(string memory in_name) public{
         pet_name[msg.sender] = in_name;
-        emit get_pet_name_Event(pet_name[msg.sender]);
+        emit set_pet_name_Event("Set pet name successfully");
     }
 
     //必要函数
