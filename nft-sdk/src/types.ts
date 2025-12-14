@@ -9,6 +9,7 @@ export interface NFTMetadata {
     value: string;
   }>;
   [key: string]: any;
+
 }
 
 export interface NFTInfo {

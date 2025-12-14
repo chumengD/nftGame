@@ -31,7 +31,7 @@ export class NFTService {
   }
 
   /**
-   * 获取用户拥有的所有NFT
+   * 获取用户拥有的所有NFT.
    */
   async getUserNFTs(userAddress: string): Promise<NFTInfo[]> {
     try {
