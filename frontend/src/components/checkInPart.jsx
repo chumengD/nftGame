@@ -68,7 +68,7 @@ writeContract({
 
   
 
-        <div className='accumulat_days'>{days} counts</div>
+        <div className='accumulat_days'>{days} days</div>
 
     </div>
 

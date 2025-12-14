@@ -13,8 +13,8 @@ import { useMyStates } from "../hooks/states"
 import './home.css'
 
 export function Home(){
-  const {name,setName,mood,setMood,Exp,setExp,lv,setLv,setMoney,money}=useMyStates()
-    const {writeContract}= useWriteContract
+  const {name,setName,mood,setMood,Exp,setExp,lv,setLv,setMoney}=useMyStates()
+    const {writeContract}= useWriteContract()
 
   //展示浏览器储存数据，保证刷新后数据正常显示
   useEffect(()=>{
@@ -64,13 +64,14 @@ export function Home(){
     useWatchContractEvent({
         abi:contract.abi,
         address:contract.address,
-        eventName:'mint',
+        eventName:'mint_Event',
         onLogs(logs){
           const lastLog = logs[logs.length-1]
           const data = lastLog.args
           data.isError?
-          message.error(message,2):
-          message.success(message,2)
+          console.error(`领养失败：${data.message}`):
+          console.log(`领养成功：${data.message}`)
+          setExp(data.current_user_Exp)
         }
       })
 
@@ -110,7 +111,7 @@ export function Home(){
             <div className="bg2">
                 <div className="name">{name??'NAME'}</div>
                 <div className="lv">Lv.{lv}</div>
-               {} <button className='getpet' onClick={()=>{
+                <button className='getpet' onClick={()=>{
                 writeContract({
                   abi:contract.abi,
                   address:contract.address,
