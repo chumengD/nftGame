@@ -1,0 +1,23 @@
+{
+  "name": "nft-sdk",
+  "version": "1.0.0",
+  "description": "Simple SDK for getting NFT image URLs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "echo \"No linting yet\" && exit 0"
+  },
+  "keywords": [
+    "nft",
+    "ethers",
+    "web3"
+  ],
+  "author": "ffuu",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}

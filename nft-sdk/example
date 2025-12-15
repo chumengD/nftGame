@@ -1,0 +1,11 @@
+const { NFTSDK } = require('@your-team/nft-sdk');
+
+const sdk = new NFTSDK({
+  contractAddress: '0x...', // 后端提供
+  abi: [...],              // 后端提供
+  rpcUrl: 'https://...'    // 后端提供
+});
+
+// 获取NFT图片
+const imageUrl = await sdk.getNFTImageUrl(123);
+console.log(imageUrl);
