@@ -1,32 +1,79 @@
 import React from "react";
 import { Card } from "../components/card.jsx";
-import { Cardright } from "../components/cardright.jsx";
+import { useMyStates } from "../hooks/states";
 import { Pinksquare } from "../components/pinksquare.jsx";
-import { Close } from "../components/close.jsx";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useReadContract } from "wagmi";
+import { contract } from "../hooks/contracts";
 import { Background } from "../components/background.jsx";
-import backImg from "../pages/4.png";
-import closeImg from "../pages/3.png";
-import leftImg from "../pages/1.png";
-import rightImg from "../pages/2.png";
+
 import "./record.css";
 
 export function Record() {
+  const {
+    data: historyData,
+    isLoading,
+    isError,
+    error,
+  } = useReadContract({
+    address: contract.address,
+    abi: contract.abi,
+    functionName: "getHistory",
+  });
+
+  const [history, setHistory] = useState([]);
+
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    if (!Array.isArray(historyData)) return;
+
+    const parsed = historyData.map((item) => ({
+      time: item.time.toString(),
+      username: item.username,
+    }));
+
+    setHistory(parsed);
+    setIndex(parsed.length - 1);
+  }, [historyData]);
+
+  const current = history.length ? history[index] : null;
+
+  const navigate = useNavigate();
   return (
     <div className="containerRecord">
-      <div className="times">25 DAYs</div>
-      <div className="username">name</div>
+      <div className="times">DAYs</div>
+      {current && (
+        <>
+          <div className="time">{Number(current.time)}</div>
+          <div className="username">{current.username}</div>
+        </>
+      )}
+
       <div className="black"></div>
 
       <div className="cardPos">
         <Card />
       </div>
 
-      <button className="leftPos1">
-        <img src={leftImg} alt="left" />
+      <button
+        className="leftPos1"
+        onClick={() => {
+          if (index <= 0) return;
+          setIndex(index - 1);
+        }}
+      >
+        <img src="/1.png" alt="left" />
       </button>
 
-      <button className="rightPos1">
-        <img src={rightImg} alt="right" />
+      <button
+        className="rightPos1"
+        onClick={() => {
+          if (index >= history.length - 1) return;
+          setIndex(index + 1);
+        }}
+      >
+        <img src="/2.png" alt="right" />
       </button>
 
       <div className="pinkPos">
@@ -37,12 +84,12 @@ export function Record() {
         <Background />
       </div>
 
-      <button className="editPos">
-        <img src={closeImg} alt="close" />
+      <button className="editPos" onClick={() => navigate("/")}>
+        <img src="/3.png" alt="close" />
       </button>
 
-      <button className="closePos">
-        <img src={backImg} alt="back" />
+      <button className="closePos" onClick={() => navigate("/")}>
+        <img src="/4.png" alt="back" />
       </button>
     </div>
   );
