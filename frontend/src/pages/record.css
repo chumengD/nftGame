@@ -1,78 +1,86 @@
 .containerRecord {
   position: relative;
-  width: 1800px;
-  height: 1024px;
+  width: 100vw;
+  height: 100vh;
 
   background: #f7ff1a;
 }
 
 .username {
-  position: relative;
-  width: 2px;
-  height: 13px;
-  left: 330px;
-  top: 20px;
+  position: absolute;
+  width: 5rem;
+  height: 19rem;
+  left: 20rem;
+  top: -3rem;
 
   font-family: "Jockey One";
   font-style: normal;
-  font-weight: 400;
-  font-size: 70px;
-  line-height: 134px;
+  font-weight: 40rem;
+  font-size: 4rem;
+  line-height: 10rem;
+
   z-index: 4;
   color: #000000;
 }
 
 .times {
   position: absolute;
-  width: 59px;
-  height: 56px;
-  left: 490px;
-  top: 130px;
+  width: 59rem;
+  height: 56rem;
+  left: 26rem;
+  top: 4rem;
 
   font-family: "Jockey One";
   font-style: normal;
-  font-weight: 400;
-  font-size: 50px;
-  line-height: 49px;
+  font-weight: 4rem;
+  font-size: 1.5rem;
+  line-height: 4rem;
 
   color: #000000;
 }
+.time {
+  position: absolute;
+  width: 59rem;
+  height: 56rem;
+  left: 23rem;
+  top: 4rem;
 
+  font-family: "Jockey One";
+  font-style: normal;
+  font-weight: 400rem;
+  font-size: 1.5rem;
+  line-height: 4rem;
+
+  color: #000000;
+}
 .cardPos {
   position: absolute;
 
-  left: 10px;
-  top: 120px;
-  size: 90px;
+  left: 1rem;
+  top: 3rem;
+  size: 9rem;
   z-index: 1;
 }
 
-.cardRightPos {
-  left: 750px;
-  top: 80px;
-  size: 90px;
-  position: absolute;
-}
-
 .pinkPos {
-  left: 800px;
-  top: 80px;
-  size: 90px;
+  left: 52rem;
+  top: 0rem;
+  size: 3rem;
   position: absolute;
-  z-index: 2;
+  z-index: 4;
 }
 
 .bgPos {
-  left: 17px;
-  top: 300px;
-  size: 90px;
+  left: 4rem;
+  top: 13.9rem;
+  size: 9rem;
   position: absolute;
 }
 
 .closePos {
   position: absolute;
-  left: 1500px;
-  top: 40px;
+  left: 90rem;
+  top: 2rem;
   z-index: 4;
   padding: 0;
   border: none;
@@ -80,14 +88,14 @@
 }
 .closePos img {
   display: block;
-  width: 70px; /* 和你切图一致 */
-  height: 70px;
+  width: 4.5rem; /* 和你切图一致 */
+  height: 4.5rem;
 }
 
 .editPos {
   position: absolute;
-  left: 570px;
-  top: 120px;
+  left: 28rem;
+  top: 3.5rem;
   z-index: 4;
   padding: 0;
   border: none;
@@ -97,23 +105,8 @@
 }
 .editPos img {
   display: block;
-  width: 45px; /* 和你切图一致 */
-  height: 33px;
-}
-
-.black {
-  position: absolute;
-  left: 570px;
-  top: 120px;
-  z-index: 4;
-  padding: 0;
-  border: none;
-  background: transparent;
-}
-.black img {
-  display: block;
-  width: 45px; /* 和你切图一致 */
-  height: 33px;
+  width: 2rem; /* 和你切图一致 */
+  height: 1.5rem;
 }
 
 .logo {
@@ -125,8 +118,8 @@
 }
 .leftPos1 {
   position: absolute;
-  left: 1000px;
-  top: 280px;
+  left: 65rem;
+  top: 12.05rem;
   z-index: 4;
   padding: 0;
   border: none;
@@ -136,14 +129,14 @@
 }
 .leftPos1 img {
   display: block;
-  width: 75px; /* 和你切图一致 */
-  height: 65px;
+  width: 4.5rem; /* 和你切图一致 */
+  height: 4rem;
 }
 
 .rightPos1 {
   position: absolute;
-  left: 1100px;
-  top: 280px;
+  left: 70rem;
+  top: 12rem;
   z-index: 4;
   padding: 0;
   border: none;
@@ -154,6 +147,6 @@
 
 .rightPos1 img {
   display: block;
-  width: 75px; /* 和你切图一致 */
-  height: 65px;
+  width: 4.5rem; /* 和你切图一致 */
+  height: 4.3rem;
 }

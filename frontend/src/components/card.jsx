@@ -20,9 +20,7 @@ export function Card() {
           <div className="day">{day ? day : "30"}</div>
         </div>
         <div className="displayPart">
-          <span className="words">
-            bulabulabulabulabulabulabulabulabulabulabulabulabula
-          </span>
+          <span className="words">宠物成长的每一步，像素会停但时间是真的</span>
         </div>
         <div className="shadow"></div>
       </div>

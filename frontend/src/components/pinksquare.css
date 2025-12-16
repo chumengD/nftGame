@@ -1,9 +1,9 @@
 .pink5 {
   position: relative;
-  width: 226px;
-  height: 173px;
+  width: 12rem;
+  height: 8rem;
   left: -740px;
-  top: -40px;
+  top: 1rem;
 
   background: #f66fcf;
 }
@@ -12,10 +12,10 @@
   box-sizing: border-box;
 
   position: relative;
-  width: 228px;
-  height: 179px;
+  width: 12rem;
+  height: 8rem;
   left: -770px;
-  top: -240px;
+  top: -7.9rem;
 
   background: url(17EBD10E623EF83D514E8EADCF1CBF5D.jpg), #ffffff;
   border: 10px solid #ffffff;
