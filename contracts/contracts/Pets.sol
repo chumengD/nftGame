@@ -15,6 +15,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     mapping(address => uint256) pet_Level;
     mapping(address => uint256) add_user_exp_cnt;
     mapping(address => string) pet_name;
+    mapping(address => uint256) user_TokenId;
 
     struct Production {
         uint256 id;
@@ -22,7 +23,6 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         uint256 nutrition;
         uint256 happy_value;
     }
-    mapping(address => uint256) user_TokenId;
     mapping(uint256 => Production) public production;
     uint256 private _nextTokenId;
     
@@ -30,9 +30,10 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
 
     //初始化商品
     function init_product() internal {
-        production[1] = Production(1, 100, 10, 200);
-        production[2] = Production(2, 200, 25, 300);
-        production[3] = Production(3, 300, 70, 400);
+        production[1] = Production(1, 114, 0, 250);
+        production[2] = Production(2, 99, 60, 0);
+        production[3] = Production(3, 71, 80, 0);
+        production[4] = Production(4, 86, 0, 168);
     }
     //初始化uri
     function init_petsUri() internal {
@@ -53,7 +54,6 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     // 签到函数
     event add_user_exp_Event(bool isError, uint256 current_user_Exp, uint256 count, string message);
     function add_user_exp() public{
-        add_user_exp_cnt[msg.sender] += 1;
         user_Exp[msg.sender] += 100;
         add_user_exp_cnt[msg.sender] +=1;
         emit add_user_exp_Event(false, user_Exp[msg.sender], add_user_exp_cnt[msg.sender],"Sign in successful");
@@ -88,32 +88,35 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     }
 
     //商店购买函数
-    event shopping_Event(bool isError, string message, uint256 current_user_Exp, uint256 current_pet_Exp, uint256 current_pet_Level);
+    event shopping_Event(bool isError, string message, uint256 current_user_Exp, uint256 current_pet_Exp, uint256 current_pet_Level,uint256 current_pet_Happy);
     function shopping(uint256 _id) public{
         if(user_Exp[msg.sender] < production[_id].price){
-            emit shopping_Event(true, "You don't have enough experience points to buy this production!", user_Exp[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender]);
+            emit shopping_Event(true, "You don't have enough experience points to buy this production!", user_Exp[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender],pet_Happy[msg.sender]);
         }else{
             user_Exp[msg.sender] -= production[_id].price;
             pet_Exp[msg.sender] += production[_id].nutrition;
             pet_Happy[msg.sender] += production[_id].happy_value;
+            if(pet_Happy[msg.sender]>600){
+                pet_Happy[msg.sender] = 600;
+            }
             add_pet_level();
-            emit shopping_Event(false, "Purchase Successful", user_Exp[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender]);
+            emit shopping_Event(false, "Purchase Successful", user_Exp[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender],pet_Happy[msg.sender]);
         }
     }
     
     //初始化获取时间
     function startgetCurrentTimestamp() public{
         last_Time[msg.sender] = block.timestamp;
-        pet_Happy[msg.sender] = 600;
+        pet_Happy[msg.sender] = 300;
     }
 
     //制造宠物函数
-    event mint_Event(bool isError, string message,uint256 current_user_Exp,uint256 current_pet_Level);
+    event mint_Event(bool isError, string message,uint256 current_user_Exp,uint256 current_pet_Level,uint256 tokenId);
     function mint() public{
         if(user_Exp[msg.sender]<100){
-            emit mint_Event(true, "You need at least 100 experience points to get a pet!", user_Exp[msg.sender],pet_Level[msg.sender]);
-        }else if(balanceOf(msg.sender)>=1){
-            emit mint_Event(true, "A person only can have one pet!",user_Exp[msg.sender],pet_Level[msg.sender]);
+            emit mint_Event(true, "You need at least 100 experience points to get a pet!", user_Exp[msg.sender],pet_Level[msg.sender],0);
+        }else if(user_TokenId[msg.sender]!=0){
+            emit mint_Event(true, "A person only can have one pet!",user_Exp[msg.sender],pet_Level[msg.sender],0);
         }else{
             uint256 tokenId = _nextTokenId++;
             _safeMint(msg.sender, tokenId);
@@ -122,7 +125,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             startgetCurrentTimestamp();
             user_Exp[msg.sender] -= 100;
             pet_Level[msg.sender] = 1;
-            emit mint_Event(false, "Creat pets successfully!",user_Exp[msg.sender],pet_Level[msg.sender]);
+            emit mint_Event(false, "Creat pets successfully!",user_Exp[msg.sender],pet_Level[msg.sender],tokenId);
         }
     }
 
@@ -145,24 +148,23 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     }
 
     //获取时间
-    event getCurrentTimestamp_Event(string current_pet_name,uint256 current_user_Exp, uint256 current_pet_Happy, uint256 current_pet_Exp, uint256 current_pet_Level, string message);
+    event getCurrentTimestamp_Event(string current_pet_name, uint256 current_user_Exp,uint256 current_pet_Exp,uint256 current_pet_Happy, uint256 current_pet_Level, string message,uint256 user_tokenid,uint256 current_user_add_cnt);
     function getCurrentTimestamp() public{
         if(last_Time[msg.sender]!=0){
             uint256 now_Time = block.timestamp;
             uint256 x=happy_calculate(now_Time-last_Time[msg.sender]);
             last_Time[msg.sender] = now_Time;
             if(x==0){
-                emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "please attention your pet emotion!");
+                emit getCurrentTimestamp_Event(pet_name[msg.sender], user_Exp[msg.sender],pet_Exp[msg.sender],pet_Happy[msg.sender], pet_Level[msg.sender], "please attention your pet emotion!",user_TokenId[msg.sender],add_user_exp_cnt[msg.sender]);
             }else if(x==1){
-                emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Level substract 1");
+                emit getCurrentTimestamp_Event(pet_name[msg.sender], user_Exp[msg.sender],pet_Exp[msg.sender],0, pet_Level[msg.sender], "Level substract 1",user_TokenId[msg.sender],add_user_exp_cnt[msg.sender]);
             }else{
-                emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], 0, pet_Exp[msg.sender], pet_Level[msg.sender], "Your pet's level is already 0");
+                emit getCurrentTimestamp_Event(pet_name[msg.sender], user_Exp[msg.sender],pet_Exp[msg.sender],0, pet_Level[msg.sender], "Your pet's level is already 0",user_TokenId[msg.sender],add_user_exp_cnt[msg.sender]);
             }
         }else{
-            emit getCurrentTimestamp_Event(pet_name[msg.sender],user_Exp[msg.sender], pet_Happy[msg.sender], pet_Exp[msg.sender], pet_Level[msg.sender], "You don't have a pet yet!");
+            emit getCurrentTimestamp_Event("NAME", user_Exp[msg.sender],pet_Exp[msg.sender],pet_Happy[msg.sender], pet_Level[msg.sender], "You don't have a pet yet!",user_TokenId[msg.sender],add_user_exp_cnt[msg.sender]);
         }
     }
-
     //获得宠物名称
     event set_pet_name_Event(string message);
     function set_pet_name(string memory in_name) public{
