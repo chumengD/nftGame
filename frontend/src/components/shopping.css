@@ -5,7 +5,7 @@ body{
 .shop_icon{
     position: relative;
     top:1rem;
-    left:4rem;
+    left:7rem;
     width: 7rem;
     height: 3rem;
     background-color: black;
@@ -26,9 +26,9 @@ body{
 
 .shop_bg_shadow{
     position: relative;
-    margin-left:10rem;
+    margin-left:12rem;
     margin-top: 4rem;
-    width:27rem;
+    width:29rem;
     height: 23rem;
     background:black;   
 }
@@ -37,7 +37,7 @@ body{
     position: absolute;
     top:-2rem;
     left:-4rem;
-    width:28rem;
+    width:30rem;
     height: 23rem;
     background:white;
     overflow: auto;   
@@ -55,7 +55,7 @@ body{
     display: flex;
     flex-direction: column;
     position: relative;
-    width:20rem;
+    width:25rem;
     height:7rem;
     background-color: black;
     left:2.5rem;
@@ -66,7 +66,7 @@ body{
     top:-1rem;
     left:-1rem;
     position: absolute;
-    width:20rem;
+    width:25rem;
     height:7rem;
     background-color: #F7FF1A;
 
@@ -116,7 +116,7 @@ body{
     position: absolute;
     left:7rem;
     top:3.6rem;
-    width: 9.6rem;
+    width: 14rem;
     height: 3rem;
     background-color:#F66FCF;
 
@@ -125,11 +125,11 @@ body{
 .goods_des{
     position: absolute;
     display: flex;
-    justify-content: center;
-    top:-0.5rem;
+    align-items: center;
+    top:-1rem;
     left:-1.2rem;
-    width: 10rem;
-    height: 3rem;
+    width: 14.6rem;
+    height: 3.5rem;
     background-color: white;
     padding: 0.5rem;
     font-size: 0.8rem;
@@ -142,7 +142,7 @@ body{
     width: 2.8rem;
     height:2.8rem;
     top:0.8rem;
-    left:16.7rem;
+    left:21.5rem;
 }
 
 .goods_buy{

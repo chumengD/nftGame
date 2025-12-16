@@ -1,5 +1,4 @@
 import {Link,useNavigate} from "react-router-dom"
-import {ConnectButton} from "@rainbow-me/rainbowkit"
 import { useReadContract, useWriteContract,useWatchContractEvent,useAccount} from "wagmi"
 import { useState,useEffect } from "react"
 import {contract} from '../hooks/contracts'
@@ -8,14 +7,28 @@ import { MyConnectButton } from "../components/connectButton"
 import { CheckIn_part } from "../components/checkInPart"
 import { Shop } from "../components/shopping"
 import { useMyStates } from "../hooks/states"
+import  NFTSDK  from 'nft-sdk'
+import { MyInput } from "../components/Myinput"
 
 import './home.css'
 
 export function Home(){
-  const {name,setName,mood,setMood,Exp,setExp,lv,setLv,setMoney,money,days,setDays,tokenId,setTokenId}=useMyStates()
+
+  const {name,setName,
+    mood,setMood,
+    Exp,setExp,
+    lv,setLv,
+    setMoney,money,
+    days,setDays,
+    tokenId,setTokenId,
+    image,setImage
+  }=useMyStates()
+
   const {writeContract}= useWriteContract()
   const {address} = useAccount()
   const [isLoaded,setIsload] =useState(false)
+  const [isModal,setIsmodal] = useState(false)
+  const [inputName,setInputName] = useState('')
 
   //展示浏览器储存数据，保证刷新后数据正常显示
   useEffect(()=>{
@@ -49,7 +62,7 @@ useEffect(() => {
     }, [money, mood, Exp, lv,isLoaded,days]) 
 
 
-    //监听getCurrentTimestamp事件函数
+    //监听getCurrentTimestamp事件函数，获取name,宠物经验，用户经验，心情，等级，tokenid，签到次数
     useWatchContractEvent({
       address:contract.address,
         abi:contract.abi,
@@ -64,8 +77,10 @@ useEffect(() => {
           setExp(Number(data.current_pet_Exp));
           setLv(Number(data.current_pet_Level));
           setMoney(Number(data.current_user_Exp));
-          console.log(`current_pet_name:${data.current_pet_name}`)
           setName(data.current_pet_name);
+          setTokenId(Number(data.user_tokenid));
+          setDays(Number(data.current_user_add_cnt))
+          console.log(`current_pet_name:${data.current_pet_name}`)
           console.log(`home.time.message：`,data.message)
 
         }
@@ -76,12 +91,9 @@ useEffect(() => {
         abi:contract.abi,
         address:contract.address,
         eventName:'mint_Event',
-        poll: true, 
-        pollingInterval: 1_000, // 每1秒轮询一次（仅用于调试）
         onLogs(logs){
-        console.log("收到原始 Logs:", logs); // 先看这个有没有输出
           const lastLog = logs[logs.length-1]
-          const data = lastLog.args
+          const data = lastLog.args发
           data.isError?
           console.error(`领养失败：${data.message}`):
           console.log(`领养成功：${data.message}`)
@@ -89,10 +101,17 @@ useEffect(() => {
           setLv(Number(data.current_pet_Level))
           setTokenId(Number(data.tokenId))
         }
-      })
+      },{onSuccess:()=>{
+        setIsmodal(true)
+      }})
 
-  /*  //获取宠物名称，在lv>=1时调用
-    useReadContract({
+      //输入宠物名字
+
+
+
+
+      //获取宠物名字
+    const {data:petNAme} = useReadContract({
       abi:contract.abi,
       address:contract.address,
       functionName:'get_pet_name',
@@ -100,8 +119,23 @@ useEffect(() => {
         enabled: lv>=1
       }
     })
+    useEffect(()=>{if(petNAme){setName(petNAme)}},[petNAme])
 
-*/
+
+
+    //展示·宠物部分
+    async function showpet() {
+    if(lv){
+    const sdk = new NFTSDK({
+      contractAddress: contract.address, 
+      abi: contract.abi,             
+      rpcUrl: 'https://sepolia.infura.io/v3/1753e902a5d243499b272f4f7309ab87'  
+    });
+    const imageUrl = await sdk.getNFTImageUrl(tokenId);
+    setImage(imageUrl)
+  }}
+  showpet()
+
 
     //跳转页面的函数
     const navigate =useNavigate()
@@ -110,6 +144,11 @@ useEffect(() => {
     }
 
     return (<><div className="home">
+
+      {isModal? <div className="over_shadow">
+        <MyInput inputValue={inputName} setInputValue={setInputName} />
+      </div>
+      :<></>}
 
     <div className="bg" >
         <div className="websiteName">
@@ -127,13 +166,13 @@ useEffect(() => {
             <div className="bg2">
                 <div className="name">{name??'NAME'}</div>
                 <div className="lv">Lv.{lv}</div>
-                <button className='getpet' onClick={()=>{
+            {lv ?<div className="pet"><img src={image} width='600rem'/></div>: <button className='getpet' onClick={()=>{
                 writeContract({
                   abi:contract.abi,
                   address:contract.address,
                   functionName:'mint',
                 })
-               }}>领养宠物</button>
+               }}>领养宠物</button>}
          
             </div>
         </div>
@@ -147,10 +186,10 @@ useEffect(() => {
 
         <div className="mood">
           <div className="moodContent">
-            <ProgressBar progress={mood} isUpright={true}>Mood</ProgressBar>
+            <ProgressBar progress={mood/6} isUpright={true}>Mood</ProgressBar>
             <div className="moodValue">{mood} <br/>
                  /<br/>
-                 100 <img src='../../public/mood.png' width='21rem'/><br/> </div>
+                 600 <img src='../../public/mood.png' width='21rem'/><br/> </div>
           </div>
           <div className="moodBarshadow"></div>
         </div>

@@ -1,9 +1,9 @@
 const { NFTSDK } = require('@your-team/nft-sdk');
 
 const sdk = new NFTSDK({
-  contractAddress: '0x...', // 后端提供
-  abi: [...],              // 后端提供
-  rpcUrl: 'https://...'    // 后端提供
+  contractAddress: contract.address, // 后端提供
+  abi: contract.abi,              // 后端提供
+  rpcUrl: 'https://sepolia.infura.io/v3/1753e902a5d243499b272f4f7309ab87'    // 后端提供
 });
 
 // 获取NFT图片

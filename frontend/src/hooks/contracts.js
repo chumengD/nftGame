@@ -1,5 +1,5 @@
 export const contract={
-    address:'0x24A36f57117Ca2dE63AD9E47E667Fb57a3808c5b',
+    address:'0xf05196c2AFB659eA10cA818D9f343e7B36907663',
     abi:[
     {
       "inputs": [
@@ -327,6 +327,18 @@ export const contract={
         {
           "indexed": false,
           "internalType": "uint256",
+          "name": "current_user_Exp",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "current_pet_Exp",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
           "name": "current_pet_Happy",
           "type": "uint256"
         },
@@ -341,6 +353,18 @@ export const contract={
           "internalType": "string",
           "name": "message",
           "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "user_tokenid",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "current_user_add_cnt",
+          "type": "uint256"
         }
       ],
       "name": "getCurrentTimestamp_Event",
@@ -752,34 +776,6 @@ export const contract={
       "name": "shopping",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "show_information",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {

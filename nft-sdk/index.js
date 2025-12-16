@@ -1,6 +1,8 @@
-const { ethers } = require('ethers');
+// 1. 改用 import 引入依赖
+import { ethers } from 'ethers';
 
-class NFTSDK {
+// 2. 直接在类前面加上 export 关键字
+export class NFTSDK {
   constructor(config) {
     this.contractAddress = config.contractAddress;
     this.abi = config.abi;
@@ -84,5 +86,4 @@ class NFTSDK {
   }
 }
 
-// 导出
-module.exports = { NFTSDK };
+// 3. 删除底部的 module.exports = ...
