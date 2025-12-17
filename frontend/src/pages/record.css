@@ -2,8 +2,14 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-
+  overflow: hidden;
   background: #f7ff1a;
+}
+.body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .username {
@@ -149,4 +155,11 @@
   display: block;
   width: 4.5rem; /* 和你切图一致 */
   height: 4.3rem;
+}
+.petImage {
+  position: absolute; /* 使用绝对定位来精准控制位置 */
+  top: 50%; /* 根据需要调整top和left，确定图片的位置 */
+  left: 50%; /* 根据需要调整，水平居中 */
+  transform: translate(-50%, -50%); /* 完全居中 */
+  z-index: 10; /* 确保图片位于其他内容之上 */
 }

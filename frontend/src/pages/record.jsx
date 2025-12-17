@@ -1,16 +1,17 @@
-import React from "react";
-import { Card } from "../components/card.jsx";
-import { useMyStates } from "../hooks/states";
-import { Pinksquare } from "../components/pinksquare.jsx";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { useReadContract } from "wagmi";
-import { contract } from "../hooks/contracts";
+import { useMyStates } from "../hooks/states";
+import { Card } from "../components/card.jsx";
 import { Background } from "../components/background.jsx";
-
+import { Pinksquare } from "../components/pinksquare.jsx";
 import "./record.css";
-
+import { contract } from "../hooks/contracts";
 export function Record() {
+  const { lv, image } = useMyStates();
+  const [history, setHistory] = useState([]);
+  const [index, setIndex] = useState(0);
+
   const {
     data: historyData,
     isLoading,
@@ -19,43 +20,47 @@ export function Record() {
   } = useReadContract({
     address: contract.address,
     abi: contract.abi,
-    functionName: "getHistory",
+    functionName: "get_history",
   });
 
-  const [history, setHistory] = useState([]);
-
-  const [index, setIndex] = useState(0);
   useEffect(() => {
     if (!Array.isArray(historyData)) return;
 
-    const parsed = historyData.map((item) => ({
-      time: item.time.toString(),
-      username: item.username,
-    }));
+    const pet_LevelUri = historyData[0];
+    const lv = historyData[1];
 
-    setHistory(parsed);
-    setIndex(parsed.length - 1);
+    console.log("Pet Level URI:", pet_LevelUri);
+    console.log("Level:", lv);
+
+    const nftImageUrl = pet_LevelUri?.uri1 || "/pets/default.png";
+
+    setHistory([
+      {
+        lv: Number(lv ?? 0),
+        pet_LevelUri,
+        nftImageUrl,
+      },
+    ]);
+
+    setIndex(historyData.length - 1);
   }, [historyData]);
 
   const current = history.length ? history[index] : null;
-
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="containerRecord">
-      <div className="times">DAYs</div>
-      {current && (
-        <>
-          <div className="time">{Number(current.time)}</div>
-          <div className="username">{current.username}</div>
-        </>
-      )}
-
+      <div className="times">DAYS</div>
+      <div className="time">{current?.lv}</div>
+      <div className="username">cy</div>
       <div className="black"></div>
-
       <div className="cardPos">
         <Card />
       </div>
-
       <button
         className="leftPos1"
         onClick={() => {
@@ -65,7 +70,6 @@ export function Record() {
       >
         <img src="/1.png" alt="left" />
       </button>
-
       <button
         className="rightPos1"
         onClick={() => {
@@ -75,22 +79,25 @@ export function Record() {
       >
         <img src="/2.png" alt="right" />
       </button>
-
       <div className="pinkPos">
         <Pinksquare />
       </div>
-
       <div className="bgPos">
         <Background />
       </div>
-
       <button className="editPos" onClick={() => navigate("/")}>
         <img src="/3.png" alt="close" />
       </button>
-
       <button className="closePos" onClick={() => navigate("/")}>
         <img src="/4.png" alt="back" />
       </button>
+      {/* 显示 NFT 图片 */}
+      <img
+        className="petImage"
+        src={current?.nftImageUrl || "/pets/default.png"}
+        onError={(e) => (e.currentTarget.src = "/pets/0.png")}
+        alt="NFT Pet"
+      />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import "./card.css";
 import { useMyStates } from "../hooks/states";
 
 export function Card() {
-  const { level, stge, month, day } = useMyStates();
+  const { level, stage, month, day } = useMyStates();
   return (
     <>
       <div className="wholeCard">
@@ -11,8 +11,8 @@ export function Card() {
           <div className="level">{level ? level : 99}</div>
         </div>
         <div className="row_rectangle">
-          <div className="STGE">STGE</div>
-          <div className="stgeValue">{stge ? stge : 9}</div>
+          <div className="STAGE">STAGE</div>
+          <div className="stageValue">{stage ? stage : 9}</div>
         </div>
         <div className="column_rectangle">
           <div className="year">2025</div>
