@@ -156,7 +156,7 @@
   width: 4.5rem; /* 和你切图一致 */
   height: 4.3rem;
 }
-.petImage {
+.picture {
   position: absolute; /* 使用绝对定位来精准控制位置 */
   top: 50%; /* 根据需要调整top和left，确定图片的位置 */
   left: 50%; /* 根据需要调整，水平居中 */

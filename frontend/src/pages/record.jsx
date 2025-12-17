@@ -27,7 +27,7 @@ export function Record() {
     if (!Array.isArray(historyData)) return;
 
     const pet_LevelUri = historyData[0];
-    const lv = historyData[1];
+    lv = historyData[1];
 
     console.log("Pet Level URI:", pet_LevelUri);
     console.log("Level:", lv);
@@ -35,6 +35,7 @@ export function Record() {
     const nftImageUrl = pet_LevelUri?.uri1 || "/pets/default.png";
 
     setHistory([
+      ...history,
       {
         lv: Number(lv ?? 0),
         pet_LevelUri,
@@ -45,7 +46,6 @@ export function Record() {
     setIndex(historyData.length - 1);
   }, [historyData]);
 
-  const current = history.length ? history[index] : null;
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -54,8 +54,20 @@ export function Record() {
 
   return (
     <div className="containerRecord">
+      <div className="picture">
+        {pet_LevelUri?.map((item, index) => {
+          if (index < lv - 1) {
+            return (
+              <div key={index}>
+                <img src={item.uri1} alt="pet" />
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
       <div className="times">DAYS</div>
-      <div className="time">{current?.lv}</div>
+      <div className="time">{lv}</div>
       <div className="username">cy</div>
       <div className="black"></div>
       <div className="cardPos">
@@ -91,13 +103,10 @@ export function Record() {
       <button className="closePos" onClick={() => navigate("/")}>
         <img src="/4.png" alt="back" />
       </button>
-      {/* 显示 NFT 图片 */}
-      <img
-        className="petImage"
-        src={current?.nftImageUrl || "/pets/default.png"}
-        onError={(e) => (e.currentTarget.src = "/pets/0.png")}
-        alt="NFT Pet"
-      />
+
+      <div className="home">
+        {image && <img src={image} alt="pet" width="600rem" />}
+      </div>
     </div>
   );
 }
