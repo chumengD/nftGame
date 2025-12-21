@@ -14,6 +14,7 @@
     "@rainbow-me/rainbowkit": "^2.2.9",
     "@tanstack/react-query": "^5.90.10",
     "antd": "^5.29.1",
+    "ethers": "^6.16.0",
     "nft-sdk": "file:../nft-sdk",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

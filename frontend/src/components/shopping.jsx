@@ -8,7 +8,7 @@ import { parseEventLogs } from 'viem';
 
 
 function ShopCard({number,cost,image,des}){
-    const{lv,setLv,setMoney,setExp,setMood} = useMyStates()
+    const{lv,setLv,setMoney,setExp,setMood,tokenId} = useMyStates()
     const {address} =useAccount()
     const [hash,setHash] = useState()
     const {writeContract} = useWriteContract()
@@ -40,6 +40,33 @@ function ShopCard({number,cost,image,des}){
             }
             },[data,isSuccess])
 
+  //用于同步宠物图片在钱包的刷新
+  async function updatePicture() {
+    console.log("开始请求 OpenSea 刷新元数据...");
+      const url = `/opensea-api/api/v2/chain/sepolia/contract/${contract.address}/nfts/${tokenId}/refresh`;
+    await new Promise(r => setTimeout(r, 2000));
+
+      try{
+        const response = await fetch(url,{
+          method:'POST',
+          headers:{
+            'Accept': 'application/json',
+            'X-API-KEY': '63ee6ef8cdc94ff8a90adbc9a4cffeed', 
+            'Content-Type': 'application/json'
+          }
+        })
+                  
+      if(response.ok){
+          console.log('nft图片更新成功！')
+        }else{
+          const error = await response.json()
+          console.log('nft图片更新失败:',error)
+          
+        }
+      }catch(error){
+        console.error('网络请求错误:',error)
+      }
+            }
 
     /*因未知原因错误的监听方式
     useWatchContractEvent({
@@ -57,6 +84,7 @@ function ShopCard({number,cost,image,des}){
             setExp(data.current_pet_Exp)
         }   
            })*/
+
     return(<div className='goods_Shadow'>
     <div className='goods_bg'>
         <div className='goods_number'>Goods {number??0}</div>
@@ -75,6 +103,7 @@ function ShopCard({number,cost,image,des}){
             args:[number]
            },{onSuccess:(hash)=>{
             setHash(hash)
+            updatePicture()
             console.log(`购买${number}商品成功！`)
            },
            onError:(error)=>{
