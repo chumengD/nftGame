@@ -202,7 +202,7 @@ useEffect(() => {
             <ProgressBar progress={mood/6} isUpright={true}>Mood</ProgressBar>
             <div className="moodValue">{mood} <br/>
                  /<br/>
-                 600 <img src='../../public/mood.png' width='21rem'/><br/> </div>
+                 600 <img src='/mood.png' width='21rem'/><br/> </div>
           </div>
           <div className="moodBarshadow"></div>
         </div>
