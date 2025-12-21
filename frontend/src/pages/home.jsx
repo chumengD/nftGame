@@ -10,8 +10,10 @@ import { useMyStates } from "../hooks/states"
 import  {NFTSDK}  from 'nft-sdk'
 import { MyInput } from "../components/Myinput"
 import { parseEventLogs } from 'viem'
+import { message } from 'antd';
 
 import './home.css'
+
 
 export function Home(){
 
@@ -184,7 +186,9 @@ useEffect(() => {
                   abi:contract.abi,
                   address:contract.address,
                   functionName:'mint',
-                },{onSuccess:(writeHash)=>{setPetHash(writeHash)}})
+                },{onSuccess:(writeHash)=>{
+                  message.success('领养中',2)
+                  setPetHash(writeHash)}})
                }}>领养宠物</button>}
          
             </div>

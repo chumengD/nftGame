@@ -4,6 +4,7 @@ import { contract } from '../hooks/contracts'
 import {useMyStates } from '../hooks/states'
 import { useState ,useEffect} from 'react'
 import { parseEventLogs } from 'viem'
+import { message } from 'antd';
 
 export function CheckIn_part({blessing}){
     const {setMoney,money,setDays,days} = useMyStates()
@@ -94,7 +95,8 @@ writeContract({
      abi:contract.abi,
      functionName:"add_user_exp"
  },{onSuccess: (Hash) => {
-     setCheckInTxHash(Hash) 
+     setCheckInTxHash(Hash)
+     message.success('签到中',2) 
                             },})
 
 }

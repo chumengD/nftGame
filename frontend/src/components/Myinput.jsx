@@ -3,6 +3,7 @@ import { useState ,useEffect} from "react";
 import { useMyStates } from "../hooks/states";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { contract } from "../hooks/contracts";
+import { message } from 'antd';
 
 export function MyInput({ inputValue, setInputValue,  }) {
   const {setName,name,setIsmodal}=useMyStates()
@@ -52,6 +53,7 @@ function confirmClick(){
           args:[inputValue],
           },
           {onSuccess:(writehash)=>{
+              message.success('命名成功！',2)
               setHash(writehash)},
             onError:(error)=>{
               console.error('用户拒绝或交易出错', error);}

@@ -4,6 +4,7 @@ import { useAccount, useReadContract,useWaitForTransactionReceipt,useWatchContra
 import { contract } from '../hooks/contracts';
 import { useState,useEffect } from 'react';
 import { parseEventLogs } from 'viem';
+import { message } from 'antd';
 
 
 
@@ -104,6 +105,7 @@ function ShopCard({number,cost,image,des}){
            },{onSuccess:(hash)=>{
             setHash(hash)
             updatePicture()
+            message.success('购买成功！',2)
             console.log(`购买${number}商品成功！`)
            },
            onError:(error)=>{
