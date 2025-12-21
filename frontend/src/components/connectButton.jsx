@@ -137,7 +137,7 @@ return (<div style={{
                 <div style={{ display: 'flex', gap: 12 , position:'absolute', top:'2.5rem' , left:'70rem', transform:'scale(1.2)'}}>
                   <button
                     onClick={openChainModal}
-                    style={{ display: 'flex', alignItems: 'center' }}
+                    style={{ display: 'flex', alignItems: 'center', backgroundColor:'white', color:'black'}}
                     type="button"
                   >
                     {chain.hasIcon && (
@@ -162,7 +162,7 @@ return (<div style={{
                     )}
                     {chain.name}
                   </button>
-                  <button onClick={openAccountModal} type="button">
+                  <button onClick={openAccountModal} type="button" style={{backgroundColor:'white', color:'black'}}>
                     {account.displayName}
                   </button>
                 </div>

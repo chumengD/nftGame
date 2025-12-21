@@ -38,7 +38,8 @@ export function ProgressBar({ progress ,isUpright=false,children}) {
             width:'4rem',
             fontSize:'1.3rem',
            alignItems:'center', 
-           zIndex:'10'  
+           zIndex:'10',
+           color:'black'  
           }}
         >
           {children}
